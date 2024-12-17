@@ -18,7 +18,21 @@
 @font-face {
   font-family: "SF Pro Text";
   src: url("/public/fonts/SF-Pro-Text-Bold.otf") format("opentype");
-  font-weight: 700;
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/public/fonts/SF-Pro-Display-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url("/public/fonts/SF-Pro-Display-Bold.otf") format("opentype");
+  font-weight: 600;
   font-style: normal;
 }
 
