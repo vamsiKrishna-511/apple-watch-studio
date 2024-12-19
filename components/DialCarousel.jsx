@@ -16,9 +16,9 @@ export default function DialCarousel({
     <div className="flex flex-col items-center relative">
       <Carousel
         items={DATA}
-        itemWidth={312}
+        itemWidth={280}
         renderItem={(item) => (
-          <div className="relative w-[52vw] flex items-center justify-center max-w-[500px] max-h-[500px] aspect-square	">
+          <div className="relative w-[52vw] flex items-center justify-center max-w-[385px] max-h-[385px] aspect-square">
             <Image src={item.src} alt={item.alt} fill />
           </div>
         )}

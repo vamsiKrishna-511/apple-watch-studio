@@ -50,7 +50,7 @@ const Carousel = ({ items, renderItem, itemWidth = 300 }) => {
       {showArrows && canScrollLeft && (
         <button
           onClick={() => scrollByItem("left")}
-          className="absolute z-10 p-2 bg-white rounded-full shadow hover:bg-gray-100 -left-[40vw] top-1/2 transform -translate-y-1/2"
+          className="absolute z-10 p-2 bg-white rounded-full shadow hover:bg-gray-100 right-[55vw] top-1/2 transform -translate-y-1/2"
           aria-label="Scroll left"
         >
           <svg
@@ -93,7 +93,7 @@ const Carousel = ({ items, renderItem, itemWidth = 300 }) => {
       {showArrows && canScrollRight && (
         <button
           onClick={() => scrollByItem("right")}
-          className="absolute z-10 p-2 bg-white rounded-full shadow hover:bg-gray-100  -right-[40vw] top-1/2 transform -translate-y-1/2"
+          className="absolute z-10 p-2 bg-white rounded-full shadow hover:bg-gray-100 left-[55vw] top-1/2 transform -translate-y-1/2"
           aria-label="Scroll right"
         >
           <svg
