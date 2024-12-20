@@ -1,7 +1,13 @@
+/* Move all imports to the top */
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
+@import "swiper/css/autoplay";
+
+/* Then your Tailwind directives after all imports */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 * {
   margin: 0px;
   padding: 0px;

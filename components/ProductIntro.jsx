@@ -5,7 +5,7 @@ import COLORS from "@/utils/colors";
 import { PrimaryButton } from "./common/Buttons";
 import Image from "next/image";
 import { CONSTANTS } from "@/utils/constants";
-import DialCarousel from "./DialCarousel";
+import CarouselStudio from "./CarouselStudio";
 import WatchStudio from "./WatchStudio";
 
 const ProductIntro = () => {

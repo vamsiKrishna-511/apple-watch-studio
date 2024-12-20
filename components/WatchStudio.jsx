@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { NavigationItem } from "./common/Text";
 import COLORS from "@/utils/colors";
-import DialCarousel from "./DialCarousel";
+import CarouselStudio from "./CarouselStudio";
 
 const WatchStudio = () => {
   const [showStudio, setShowStudio] = useState(false);
@@ -17,7 +17,7 @@ const WatchStudio = () => {
     <div className="">
       <div className={`relative z-0 -top-7 `}>
         {showStudio ? (
-          <DialCarousel />
+          <CarouselStudio />
         ) : (
           <div className="">
             <Image

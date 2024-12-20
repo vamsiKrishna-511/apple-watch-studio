@@ -11,3 +11,9 @@ export const CAROUSEL_TYPE = {
   DIAL: "dial",
   STRAP: "strap",
 };
+
+export const SELECTION_TYPE = {
+  SIZE: "Size",
+  CASE: "Case",
+  BAND: "Band",
+};

@@ -1,124 +1,107 @@
 "use client";
-import React, { useRef, useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
+import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import { SELECTION_TYPE } from "@/utils/constants";
 
-const Carousel = ({ items, renderItem, itemWidth = 300 }) => {
-  const scrollContainerRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-
-  // Check scroll position to show/hide arrows
-  const checkScrollPosition = () => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const { scrollLeft, scrollWidth, clientWidth } = container;
-
-    // canScrollLeft is true if scrollLeft > 0
-    setCanScrollLeft(scrollLeft > 0);
-
-    // canScrollRight is true if (scrollLeft + clientWidth) < scrollWidth
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
-  };
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    // Initial check
-    checkScrollPosition();
-
-    // Add scroll event listener
-    container.addEventListener("scroll", checkScrollPosition);
-    return () => container.removeEventListener("scroll", checkScrollPosition);
-  }, [items]);
-
-  const scrollByItem = (direction) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const scrollAmount = direction === "left" ? -itemWidth : itemWidth;
-    container.scrollBy({ left: scrollAmount, behavior: "smooth" });
-  };
-
-  // If less than 2 items, no need to show arrows
-  const showArrows = items.length > 1;
-
+export default function Carousel({
+  items,
+  carouselType,
+  handleSelectedItem,
+  selectedCase,
+  selectedItem,
+  selectedBand,
+}) {
+  const [centerIndex, setCenterIndex] = useState(0);
+  console.log("centerIndex", centerIndex, selectedCase, selectedBand);
   return (
-    <div className="relative w-full flex flex-col items-center justify-center">
-      {/* Only show arrows if more than one item */}
-      {showArrows && canScrollLeft && (
-        <button
-          onClick={() => scrollByItem("left")}
-          className="absolute z-10 p-2 bg-white rounded-full shadow hover:bg-gray-100 right-[55vw] top-1/2 transform -translate-y-1/2"
-          aria-label="Scroll left"
-        >
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path
-              d="M15 6l-6 6 6 6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-      )}
-
-      <div
-        ref={scrollContainerRef}
-        className="flex overflow-x-scroll scroll-smooth snap-x snap-mandatory w-full max-w-[80vw] scrollbar-hide"
-        style={{
-          paddingLeft: "50vw",
-          paddingRight: "50vw",
-          marginLeft: "-50vw",
-          marginRight: "-50vw",
+    <div className="relative w-screen overflow-hidden flex items-center justify-center">
+      <Swiper
+        modules={[Navigation]}
+        slidesPerView={5}
+        spaceBetween={0}
+        centeredSlides={true}
+        navigation={{
+          nextEl: ".swiper-button-next-custom",
+          prevEl: ".swiper-button-prev-custom",
+        }}
+        pagination={{ clickable: true }}
+        className="w-full flex items-center justify-center"
+        onSlideChange={(swiper) => {
+          handleSelectedItem(swiper.activeIndex);
+          setCenterIndex(swiper.activeIndex);
         }}
       >
         {items.map((item, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 snap-center flex flex-col items-center mx-4"
-            style={{ width: itemWidth }}
+          <SwiperSlide
+            key={item.id}
+            className="flex justify-center items-center w-full h-full max-w-[384px]  my-auto"
           >
-            {renderItem(item, index)}
-          </div>
-        ))}
-      </div>
-
-      {showArrows && canScrollRight && (
-        <button
-          onClick={() => scrollByItem("right")}
-          className="absolute z-10 p-2 bg-white rounded-full shadow hover:bg-gray-100 left-[55vw] top-1/2 transform -translate-y-1/2"
-          aria-label="Scroll right"
-        >
-          <svg
-            width="24"
-            height="24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path
-              d="M9 18l6-6-6-6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <Image
+              src={item.src}
+              alt={item.alt}
+              width={250}
+              height={384}
+              style={{ objectFit: "contain" }}
+              className={
+                carouselType === SELECTION_TYPE.CASE ? "scale-125" : "scale-125"
+              }
             />
-          </svg>
-        </button>
-      )}
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      {/* Navigation Arrows */}
+      <button
+        className="swiper-button-prev-custom absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3 text-black hover:text-gray-700 bg-white/70 rounded-full shadow hover:bg-white transition"
+        aria-label="Previous Slide"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path
+            d="M15 19l-7-7 7-7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      <button
+        className="swiper-button-next-custom absolute right-0 top-1/2 -translate-y-1/2 z-10 p-3 text-black hover:text-gray-700 bg-white/70 rounded-full shadow hover:bg-white transition"
+        aria-label="Next Slide"
+      >
+        <svg
+          className="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      <Image
+        src={
+          carouselType === SELECTION_TYPE.BAND
+            ? selectedCase?.src
+            : selectedBand?.src
+        }
+        width={300}
+        height={400}
+        style={{ objectFit: "fill" }}
+        className={`absolute scale-150 ${
+          carouselType === SELECTION_TYPE.BAND ? "z-10" : ""
+        }`}
+        alt={
+          carouselType === SELECTION_TYPE.BAND
+            ? selectedCase?.alt
+            : selectedBand?.alt
+        }
+      />
     </div>
   );
-};
-
-Carousel.propTypes = {
-  items: PropTypes.array.isRequired,
-  renderItem: PropTypes.func.isRequired,
-  itemWidth: PropTypes.number,
-};
-
-export default Carousel;
+}
