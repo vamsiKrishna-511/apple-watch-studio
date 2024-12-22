@@ -11,7 +11,12 @@ import STRAP_DATA from "@/data/strapData";
 import SIZE_DATA from "@/data/sizeData";
 import { CONSTANTS, SELECTION_TYPE } from "@/utils/constants";
 import COLORS from "@/utils/colors";
-import { Caption, NavigationItem, SaveButton } from "./common/Text";
+import {
+  Caption,
+  NavigationItem,
+  ProductDescription,
+  SaveButton,
+} from "./common/Text";
 
 export default function CarouselStudio() {
   const [caseIndex, setCaseIndex] = useState(2);
@@ -161,6 +166,9 @@ export default function CarouselStudio() {
           {selectedSize?.alt} {selectedCase?.alt}
           {selectedBand?.alt && ` with ${selectedBand?.alt}`}
         </SaveButton>
+        <ProductDescription className="mt-2">
+          ${selectedSize?.price + selectedCase?.price + selectedBand?.price}
+        </ProductDescription>
       </div>
 
       {/* Buttons to switch to each carousel type */}
