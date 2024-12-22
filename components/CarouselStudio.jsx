@@ -10,15 +10,14 @@ import { Caption, NavigationItem, SaveButton } from "./common/Text";
 import SIZE_DATA from "@/data/sizeData";
 
 export default function CarouselStudio() {
-  // States for selected data
-  const [selectedCase, setSelectedCase] = useState(null);
-  const [selectedBand, setSelectedBand] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
-
   // States for keeping track of which index is centered in each carousel
-  const [caseIndex, setCaseIndex] = useState(0);
-  const [bandIndex, setBandIndex] = useState(0);
+  const [caseIndex, setCaseIndex] = useState(2);
+  const [bandIndex, setBandIndex] = useState(36);
   const [sizeIndex, setSizeIndex] = useState(1);
+
+  const [selectedCase, setSelectedCase] = useState(DIAL_DATA[caseIndex]);
+  const [selectedBand, setSelectedBand] = useState(STRAP_DATA[bandIndex]);
+  const [selectedSize, setSelectedSize] = useState(SIZE_DATA[sizeIndex]);
 
   // State controlling which carousel is visible
   const [carouselType, setCarouselType] = useState(SELECTION_TYPE.CASE);
@@ -96,7 +95,7 @@ export default function CarouselStudio() {
           APPLE WATCH SERIES 10
         </Caption>
         <SaveButton bold className="mt-2">
-          46mm {selectedCase?.alt}{" "}
+          {selectedSize?.alt} {selectedCase?.alt}{" "}
           {selectedBand?.alt && `with ${selectedBand?.alt}`}
         </SaveButton>
       </div>
