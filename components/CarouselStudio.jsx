@@ -79,7 +79,7 @@ export default function CarouselStudio() {
         />
       )}
 
-      {/* BAND CAROUSEL */}
+      {/* Size CAROUSEL */}
       {carouselType === SELECTION_TYPE.SIZE && (
         <Carousel
           items={SIZE_DATA}

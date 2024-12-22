@@ -2,53 +2,48 @@
 import { SELECTION_TYPE } from "@/utils/constants";
 import React, { useRef, useEffect, useState } from "react";
 import Slider from "react-slick";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// Custom arrow for "Next" button
 function NextArrow(props) {
   const { onClick } = props;
   return (
     <button
       type="button"
-      className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/70 rounded-full shadow hover:bg-white transition"
+      className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/100 rounded-full shadow hover:bg-white transition flex justify-center items-center"
       onClick={onClick}
       aria-label="Next Slide"
+      tabIndex={0} // Ensures button is focusable
+      style={{ backgroundColor: "#e8e8ed", width: "36px", height: "36px" }}
     >
-      <svg
-        className="w-6 h-6 text-black hover:text-gray-700"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      <FiChevronRight size={30} color="#0000008f" />
     </button>
   );
 }
 
+// Custom arrow for "Previous" button
 function PrevArrow(props) {
   const { onClick } = props;
   return (
     <button
       type="button"
-      className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/70 rounded-full shadow hover:bg-white transition"
+      className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/100 rounded-full shadow hover:bg-white transition flex justify-center items-center"
       onClick={onClick}
       aria-label="Previous Slide"
+      tabIndex={0} // Ensures button is focusable
+      style={{ backgroundColor: "#e8e8ed", width: "36px", height: "36px" }}
     >
-      <svg
-        className="w-6 h-6 text-black hover:text-gray-700"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path
-          d="M15 19l-7-7 7-7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+      <FiChevronLeft size={30} color="#0000008f" />
     </button>
   );
 }
 
+/**
+ * Universal Carousel component with keyboard support:
+ * - Arrow keys move slides left/right when the carousel container is focused.
+ * - Custom next/prev arrow buttons.
+ * - ARIA roles for accessibility.
+ */
 export default function Carousel({
   items,
   initialIndex = 0,
@@ -66,6 +61,34 @@ export default function Carousel({
       sliderRef.current.slickGoTo(initialIndex, true);
     }
   }, [initialIndex]);
+
+  // Handle arrow key presses on the carousel container
+  const handleKeyDown = (e) => {
+    if (!sliderRef.current) return;
+    // Left arrow key => previous slide, Right arrow key => next slide
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      sliderRef.current.slickPrev();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      sliderRef.current.slickNext();
+    }
+  };
+
+  // Determine which overlay image to show if needed
+  const overlaySrc =
+    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
+      ? selectedBand?.src
+      : selectedCase?.src;
+  const overlayAlt =
+    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
+      ? selectedBand?.alt
+      : selectedCase?.alt;
+
+  const overlayZindex =
+    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
+      ? 0
+      : 10;
 
   const settings = {
     infinite: false,
@@ -94,28 +117,20 @@ export default function Carousel({
     ],
   };
 
-  // Decide which overlay image to show
-  const overlaySrc =
-    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
-      ? selectedBand?.src
-      : selectedCase?.src;
-  const overlayAlt =
-    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
-      ? selectedBand?.alt
-      : selectedCase?.alt;
-
-  const overlayZindex =
-    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
-      ? 0
-      : 10;
-
   return (
-    <div className="relative w-screen bg-white overflow-hidden">
-      {/* Overlay image, behind the carousel (z-10 on the carousel, z-0 here) */}
+    <div
+      className="relative w-screen bg-white overflow-hidden"
+      // ARIA: "region" or "group" can help screen readers identify the carousel
+      role="region"
+      aria-label="Apple Watch Carousel"
+      tabIndex={0} // Make the container focusable
+      onKeyDown={handleKeyDown} // Capture arrow key events
+    >
+      {/* Overlay image behind the carousel (optional) */}
       {overlaySrc && (
         <img
           src={overlaySrc}
-          alt={overlayAlt}
+          alt={overlayAlt || ""}
           style={{
             position: "absolute",
             top: "50%",
@@ -128,6 +143,8 @@ export default function Carousel({
           }}
         />
       )}
+
+      {/* Slick Slider above the overlay */}
       <Slider ref={sliderRef} {...settings}>
         {items.map((item, index) => (
           <div
