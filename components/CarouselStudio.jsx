@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-
+import Image from "next/image";
 import Carousel from "./common/Carousel";
 import DIAL_DATA from "@/data/dialData";
 import STRAP_DATA from "@/data/strapData";
-import { SELECTION_TYPE } from "@/utils/constants";
+import { CONSTANTS, SELECTION_TYPE } from "@/utils/constants";
 import COLORS from "@/utils/colors";
 import { Caption, NavigationItem, SaveButton } from "./common/Text";
 import SIZE_DATA from "@/data/sizeData";
@@ -14,6 +14,7 @@ export default function CarouselStudio() {
   const [caseIndex, setCaseIndex] = useState(2);
   const [bandIndex, setBandIndex] = useState(36);
   const [sizeIndex, setSizeIndex] = useState(1);
+  const [showCarousel, setShowCarousel] = useState(false);
 
   const [selectedCase, setSelectedCase] = useState(DIAL_DATA[caseIndex]);
   const [selectedBand, setSelectedBand] = useState(STRAP_DATA[bandIndex]);
@@ -42,52 +43,76 @@ export default function CarouselStudio() {
   // Switch to CASE mode
   const showCaseCarousel = () => {
     setCarouselType(SELECTION_TYPE.CASE);
+    setShowCarousel(true);
   };
 
   // Switch to BAND mode
   const showBandCarousel = () => {
     setCarouselType(SELECTION_TYPE.BAND);
+    setShowCarousel(true);
   };
 
   const showSizeCarousel = () => {
     setCarouselType(SELECTION_TYPE.SIZE);
+    setShowCarousel(true);
   };
 
   return (
     <div className="w-screen bg-white">
-      {/* CASE CAROUSEL */}
-      {carouselType === SELECTION_TYPE.CASE && (
-        <Carousel
-          items={DIAL_DATA}
-          initialIndex={caseIndex}
-          onCenterChange={handleCaseCenterChange}
-          carouselType={SELECTION_TYPE.CASE}
-          selectedCase={selectedCase}
-          selectedBand={selectedBand}
-        />
-      )}
+      {showCarousel ? (
+        <div className="">
+          {/* CASE CAROUSEL */}
+          {carouselType === SELECTION_TYPE.CASE && (
+            <Carousel
+              items={DIAL_DATA}
+              initialIndex={caseIndex}
+              onCenterChange={handleCaseCenterChange}
+              carouselType={SELECTION_TYPE.CASE}
+              selectedCase={selectedCase}
+              selectedBand={selectedBand}
+            />
+          )}
 
-      {/* BAND CAROUSEL */}
-      {carouselType === SELECTION_TYPE.BAND && (
-        <Carousel
-          items={STRAP_DATA}
-          initialIndex={bandIndex}
-          onCenterChange={handleBandCenterChange}
-          carouselType={SELECTION_TYPE.BAND}
-          selectedCase={selectedCase}
-          selectedBand={selectedBand}
-        />
-      )}
+          {/* BAND CAROUSEL */}
+          {carouselType === SELECTION_TYPE.BAND && (
+            <Carousel
+              items={STRAP_DATA}
+              initialIndex={bandIndex}
+              onCenterChange={handleBandCenterChange}
+              carouselType={SELECTION_TYPE.BAND}
+              selectedCase={selectedCase}
+              selectedBand={selectedBand}
+            />
+          )}
 
-      {/* Size CAROUSEL */}
-      {carouselType === SELECTION_TYPE.SIZE && (
-        <Carousel
-          items={SIZE_DATA}
-          initialIndex={sizeIndex}
-          onCenterChange={handleSizeCenterChange}
-          carouselType={SELECTION_TYPE.SIZE}
-          selectedBand={selectedBand}
-        />
+          {/* Size CAROUSEL */}
+          {carouselType === SELECTION_TYPE.SIZE && (
+            <Carousel
+              items={SIZE_DATA}
+              initialIndex={sizeIndex}
+              onCenterChange={handleSizeCenterChange}
+              carouselType={SELECTION_TYPE.SIZE}
+              selectedBand={selectedBand}
+            />
+          )}
+        </div>
+      ) : (
+        <div className="w-full h-[312px] transform flex justify-center">
+          <Image
+            src={CONSTANTS.APPLE_MAIN_STRAP}
+            width={312}
+            height={312}
+            alt="apple watch strap"
+            className="z-0"
+          />
+          <Image
+            src={CONSTANTS.APPLE_MAIN_DIAL}
+            width={312}
+            height={312}
+            className="absolute top-0 z-0"
+            alt="apple watch dial"
+          />
+        </div>
       )}
 
       <div className="text-center mt-8">

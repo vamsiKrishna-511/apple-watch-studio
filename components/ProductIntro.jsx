@@ -60,7 +60,7 @@ const ProductIntro = () => {
               relative z-0 transition-all duration-1000
               ${
                 isStarted
-                  ? "fixed w-[312px] h-[312px] left-1/2 transform -translate-x-1/2 -translate-y-full "
+                  ? "fixed w-[312px] h-[312px] left-1/2 transform -translate-x-1/2 -translate-y-full"
                   : "mt-10"
               }
             `}
