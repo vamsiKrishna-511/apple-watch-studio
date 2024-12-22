@@ -15,7 +15,8 @@ const WatchStudio = () => {
   };
   return (
     <div className="">
-      <div className={`relative z-0 -top-7 `}>
+      <CarouselStudio />
+      {/* <div className={`relative z-0 -top-7 `}>
         {showStudio ? (
           <CarouselStudio />
         ) : (
@@ -59,7 +60,7 @@ const WatchStudio = () => {
         >
           <NavigationItem>Band</NavigationItem>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -10,7 +10,7 @@ import WatchStudio from "./WatchStudio";
 
 const ProductIntro = () => {
   const [isStarted, setIsStarted] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   console.log("here nik");
 
   const handleGetStarted = () => {

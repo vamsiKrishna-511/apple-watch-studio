@@ -1,107 +1,106 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
+import Slider from "react-slick";
 import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
 import { SELECTION_TYPE } from "@/utils/constants";
 
-export default function Carousel({
-  items,
-  carouselType,
-  handleSelectedItem,
-  selectedCase,
-  selectedItem,
-  selectedBand,
-}) {
-  const [centerIndex, setCenterIndex] = useState(0);
-  console.log("centerIndex", centerIndex, selectedCase, selectedBand);
+const settings = {
+  infinite: false, // Don’t loop, so we can stop at last item
+  centerMode: true, // Keep the active slide centered
+  centerPadding: "0px", // No extra side padding
+  variableWidth: true, // Each slide can have its own width
+  slidesToShow: 1, // 'slidesToShow' is effectively overridden by variableWidth
+  slidesToScroll: 1,
+  swipeToSlide: true, // Allows swiping beyond just slidesToScroll
+  initialSlide: 0, // Start at the first item (which will be centered)
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+  responsive: [
+    {
+      // On narrower screens, you might want smaller slides or different styling.
+      breakpoint: 768,
+      settings: {
+        centerMode: true,
+        variableWidth: true,
+        slidesToShow: 1,
+      },
+    },
+  ],
+};
+
+export default function Carousel({ items, carouselType, selectedItem }) {
+  console.log("selectedItem nik", selectedItem);
   return (
-    <div className="relative w-screen overflow-hidden flex items-center justify-center">
-      <Swiper
-        modules={[Navigation]}
-        slidesPerView={5}
-        spaceBetween={0}
-        centeredSlides={true}
-        navigation={{
-          nextEl: ".swiper-button-next-custom",
-          prevEl: ".swiper-button-prev-custom",
-        }}
-        pagination={{ clickable: true }}
-        className="w-full flex items-center justify-center"
-        onSlideChange={(swiper) => {
-          handleSelectedItem(swiper.activeIndex);
-          setCenterIndex(swiper.activeIndex);
-        }}
-      >
-        {items.map((item, index) => (
-          <SwiperSlide
+    <div className="relative w-screen overflow-hidden bg-white border">
+      <Slider {...settings}>
+        {items.map((item) => (
+          <div
             key={item.id}
-            className="flex justify-center items-center w-full h-full max-w-[384px]  my-auto"
+            style={{
+              width: carouselType === SELECTION_TYPE.CASE ? "312px" : "312px",
+              height: "312px",
+            }}
+            className="flex justify-center items-center mx-auto"
           >
-            <Image
+            <img
               src={item.src}
               alt={item.alt}
-              width={250}
-              height={384}
-              style={{ objectFit: "contain" }}
-              className={
-                carouselType === SELECTION_TYPE.CASE ? "scale-125" : "scale-125"
-              }
+              style={{
+                transform: carouselType === SELECTION_TYPE.CASE && "scale(1.2)",
+                objectFit: "cover",
+              }}
             />
-          </SwiperSlide>
+          </div>
         ))}
-      </Swiper>
-
-      {/* Navigation Arrows */}
-      <button
-        className="swiper-button-prev-custom absolute left-0 top-1/2 -translate-y-1/2 z-10 p-3 text-black hover:text-gray-700 bg-white/70 rounded-full shadow hover:bg-white transition"
-        aria-label="Previous Slide"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path
-            d="M15 19l-7-7 7-7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
-      <button
-        className="swiper-button-next-custom absolute right-0 top-1/2 -translate-y-1/2 z-10 p-3 text-black hover:text-gray-700 bg-white/70 rounded-full shadow hover:bg-white transition"
-        aria-label="Next Slide"
-      >
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
-          <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-
-      <Image
-        src={
-          carouselType === SELECTION_TYPE.BAND
-            ? selectedCase?.src
-            : selectedBand?.src
-        }
-        width={300}
-        height={400}
-        style={{ objectFit: "fill" }}
-        className={`absolute scale-150 ${
-          carouselType === SELECTION_TYPE.BAND ? "z-10" : ""
-        }`}
-        alt={
-          carouselType === SELECTION_TYPE.BAND
-            ? selectedCase?.alt
-            : selectedBand?.alt
-        }
-      />
+      </Slider>
     </div>
+  );
+}
+
+// Custom arrow for "Next" button
+function NextArrow(props) {
+  const { onClick } = props;
+  return (
+    <button
+      type="button"
+      className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/70 rounded-full shadow hover:bg-white transition"
+      onClick={onClick}
+      aria-label="Next Slide"
+    >
+      <svg
+        className="w-6 h-6 text-black hover:text-gray-700"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
+  );
+}
+
+// Custom arrow for "Previous" button
+function PrevArrow(props) {
+  const { onClick } = props;
+  return (
+    <button
+      type="button"
+      className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/70 rounded-full shadow hover:bg-white transition"
+      onClick={onClick}
+      aria-label="Previous Slide"
+    >
+      <svg
+        className="w-6 h-6 text-black hover:text-gray-700"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path
+          d="M15 19l-7-7 7-7"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </button>
   );
 }
