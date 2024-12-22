@@ -10,23 +10,22 @@ import WatchStudio from "./WatchStudio";
 
 const ProductIntro = () => {
   const [isStarted, setIsStarted] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
-  console.log("here nik");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleGetStarted = () => {
-    console.log("here nik");
     setIsStarted(true);
     setTimeout(() => {
       setIsExpanded(true);
-    }, [2000]);
+    }, 1000);
   };
 
   return (
     <div className="flex mt-16 flex-col items-center relative h-full">
-      {/* <WatchStudio /> */}
       {isExpanded && <WatchStudio />}
+
       {!isExpanded && (
-        <div className="">
+        <div>
+          {/* Text and button fade out when isStarted = true */}
           <div
             className={`w-[720px] transition-opacity duration-500 ${
               isStarted ? "opacity-0 pointer-events-none" : "opacity-100"
@@ -48,34 +47,35 @@ const ProductIntro = () => {
             <LargeHeading bold letterSpacing="-.009em">
               Create your own style.
             </LargeHeading>
+
             <div className="mt-[40px] z-10">
               <PrimaryButton onClick={handleGetStarted}>
                 Get started
               </PrimaryButton>
             </div>
           </div>
+
           <div
             className={`
-          relative z-0 transition-all duration-1000 
-          ${
-            isStarted
-              ? "fixed top-0 transform -translate-y-[600px] scale-50"
-              : "mt-10"
-          }
-        `}
-            style={{ transitionProperty: "transform, top, left, opacity" }}
+              relative z-0 transition-all duration-1000
+              ${
+                isStarted
+                  ? "fixed w-[312px] h-[312px] left-1/2 transform -translate-x-1/2 -translate-y-full "
+                  : "mt-10"
+              }
+            `}
           >
             <Image
               src={CONSTANTS.APPLE_MAIN_STRAP}
-              width={970}
-              height={970}
+              width={770}
+              height={770}
               alt="apple watch strap"
               className="z-0"
             />
             <Image
               src={CONSTANTS.APPLE_MAIN_DIAL}
-              width={970}
-              height={970}
+              width={770}
+              height={770}
               className="absolute top-0 z-0"
               alt="apple watch dial"
             />
