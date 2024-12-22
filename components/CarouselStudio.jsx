@@ -4,30 +4,42 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Carousel from "./common/Carousel";
 
-import { motion, AnimatePresence } from "framer-motion"; // <— Import Framer Motion
+import { motion, AnimatePresence } from "framer-motion";
 
 import DIAL_DATA from "@/data/dialData";
 import STRAP_DATA from "@/data/strapData";
 import SIZE_DATA from "@/data/sizeData";
 import { CONSTANTS, SELECTION_TYPE } from "@/utils/constants";
 import COLORS from "@/utils/colors";
+
 import {
   Caption,
   NavigationItem,
   ProductDescription,
   SaveButtonText,
 } from "./common/Text";
+import { useWatchConfig } from "@/context/WatchContext";
 
+useWatchConfig;
 export default function CarouselStudio() {
-  const [caseIndex, setCaseIndex] = useState(2);
-  const [bandIndex, setBandIndex] = useState(36);
-  const [sizeIndex, setSizeIndex] = useState(1);
-  const [showCarousel, setShowCarousel] = useState(false);
+  // Grab state + setState from context
+  const {
+    caseIndex,
+    setCaseIndex,
+    bandIndex,
+    setBandIndex,
+    sizeIndex,
+    setSizeIndex,
+    selectedCase,
+    setSelectedCase,
+    selectedBand,
+    setSelectedBand,
+    selectedSize,
+    setSelectedSize,
+    directlyShowSelection,
+  } = useWatchConfig();
 
-  const [selectedCase, setSelectedCase] = useState(DIAL_DATA[caseIndex]);
-  const [selectedBand, setSelectedBand] = useState(STRAP_DATA[bandIndex]);
-  const [selectedSize, setSelectedSize] = useState(SIZE_DATA[sizeIndex]);
-
+  const [showCarousel, setShowCarousel] = useState(directlyShowSelection);
   const [carouselType, setCarouselType] = useState(SELECTION_TYPE.CASE);
 
   // Handlers for changing the centered slide in each carousel
@@ -35,32 +47,32 @@ export default function CarouselStudio() {
     setCaseIndex(newIndex);
     setSelectedCase(DIAL_DATA[newIndex]);
   };
+
   const handleBandCenterChange = (newIndex) => {
     setBandIndex(newIndex);
     setSelectedBand(STRAP_DATA[newIndex]);
   };
+
   const handleSizeCenterChange = (newIndex) => {
     setSizeIndex(newIndex);
     setSelectedSize(SIZE_DATA[newIndex]);
   };
 
-  // Show "Case" carousel
+  // Show different carousels
   const showCaseCarousel = () => {
     setCarouselType(SELECTION_TYPE.CASE);
     setShowCarousel(true);
   };
-  // Show "Band" carousel
   const showBandCarousel = () => {
     setCarouselType(SELECTION_TYPE.BAND);
     setShowCarousel(true);
   };
-  // Show "Size" carousel
   const showSizeCarousel = () => {
     setCarouselType(SELECTION_TYPE.SIZE);
     setShowCarousel(true);
   };
 
-  // Decide which carousel to render if showCarousel = true
+  // Render the appropriate carousel
   const renderCarousel = () => {
     if (carouselType === SELECTION_TYPE.CASE) {
       return (
@@ -98,30 +110,38 @@ export default function CarouselStudio() {
     return null;
   };
 
-  // Framer variants for a simple fade-in/out
+  // Simple framer fade in/out
   const fadeVariants = {
     initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: { duration: 0.4 },
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.4 },
-    },
+    animate: { opacity: 1, transition: { duration: 0.4 } },
+    exit: { opacity: 0, transition: { duration: 0.4 } },
   };
 
-  // Condition: if showCarousel is false => show static watch, else => show the chosen carousel
   const currentViewKey = showCarousel ? carouselType : "static";
+
+  /**
+   * 4. "Save" button handler
+   *    - Build a shareable URL with query params
+   *    - Copy to clipboard
+   *    - Open in new tab (optional)
+   */
+  const handleSave = () => {
+    if (typeof window !== "undefined") {
+      const baseUrl = window.location.origin;
+      // Use the .id property from your data objects
+      const configUrl = `${baseUrl}?case=${selectedCase.id}&band=${selectedBand.id}&size=${selectedSize.id}`;
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(configUrl);
+    }
+  };
 
   return (
     <div className="w-screen bg-white">
       <AnimatePresence mode="wait">
-        {/* We’ll wrap our dynamic content in AnimatePresence and motion.div */}
         {showCarousel ? (
-          // The carousel is shown
           <motion.div
-            key={currentViewKey} // "CASE", "BAND", "SIZE"
+            key={currentViewKey}
             variants={fadeVariants}
             initial="initial"
             animate="animate"
@@ -130,7 +150,6 @@ export default function CarouselStudio() {
             {renderCarousel()}
           </motion.div>
         ) : (
-          // The static watch image is shown
           <motion.div
             key="static"
             variants={fadeVariants}
@@ -171,7 +190,6 @@ export default function CarouselStudio() {
         </ProductDescription>
       </div>
 
-      {/* Buttons to switch to each carousel type */}
       <div className="flex justify-center items-center gap-5 my-28">
         <div
           className="cursor-pointer px-5 py-2 rounded-full"
@@ -194,6 +212,13 @@ export default function CarouselStudio() {
         >
           <NavigationItem>Band</NavigationItem>
         </div>
+        {/* Save button
+        <button
+          onClick={handleSave}
+          className="px-5 py-2 rounded-full bg-black text-white"
+        >
+          Save
+        </button> */}
       </div>
     </div>
   );

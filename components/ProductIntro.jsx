@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LargeHeading, Subheading } from "./common/Text";
 import COLORS from "@/utils/colors";
 import { PrimaryButton } from "./common/Buttons";
@@ -7,10 +7,13 @@ import Image from "next/image";
 import { CONSTANTS } from "@/utils/constants";
 import CarouselStudio from "./CarouselStudio";
 import WatchStudio from "./WatchStudio";
+import { useWatchConfig } from "@/context/WatchContext";
 
 const ProductIntro = () => {
-  const [isStarted, setIsStarted] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { directlyShowSelection } = useWatchConfig();
+  console.log("directlyShowSelection nik", directlyShowSelection);
+  const [isStarted, setIsStarted] = useState(directlyShowSelection);
+  const [isExpanded, setIsExpanded] = useState(directlyShowSelection);
 
   const handleGetStarted = () => {
     setIsStarted(true);
@@ -18,6 +21,11 @@ const ProductIntro = () => {
       setIsExpanded(true);
     }, 1000);
   };
+
+  useEffect(() => {
+    setIsStarted(directlyShowSelection);
+    setIsExpanded(directlyShowSelection);
+  }, [directlyShowSelection]);
 
   return (
     <div className="flex mt-16 flex-col items-center relative h-full">
