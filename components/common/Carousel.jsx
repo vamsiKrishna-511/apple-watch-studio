@@ -1,9 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Slider from "react-slick";
-import { SELECTION_TYPE } from "@/utils/constants";
 
-// Custom arrow for "Next" button
 function NextArrow(props) {
   const { onClick } = props;
   return (
@@ -25,7 +23,6 @@ function NextArrow(props) {
   );
 }
 
-// Custom arrow for "Previous" button
 function PrevArrow(props) {
   const { onClick } = props;
   return (
@@ -53,19 +50,19 @@ function PrevArrow(props) {
 
 export default function Carousel({
   items,
+  initialIndex = 0,
+  onCenterChange,
   carouselType,
-  selectedItem,
-  handleSelectedItem,
-  selectedCase,
-  selectedBand,
-  selectedIndex,
 }) {
-  // Track which item is at the center
-  const [centerIndex, setCenterIndex] = useState(selectedIndex);
+  const sliderRef = useRef(null);
+  const [centerIndex, setCenterIndex] = useState(initialIndex);
 
+  // Whenever parent changes initialIndex, jump there
   useEffect(() => {
-    // handleSelectedItem(centerIndex);
-  }, [centerIndex]);
+    if (sliderRef.current && typeof initialIndex === "number") {
+      sliderRef.current.slickGoTo(initialIndex, true);
+    }
+  }, [initialIndex]);
 
   const settings = {
     infinite: false,
@@ -78,9 +75,9 @@ export default function Carousel({
     initialSlide: centerIndex,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    afterChange: (currentSlideIndex) => {
-      setCenterIndex(currentSlideIndex);
-      handleSelectedItem(currentSlideIndex);
+    afterChange: (currentIndex) => {
+      setCenterIndex(currentIndex);
+      onCenterChange?.(currentIndex);
     },
     responsive: [
       {
@@ -94,42 +91,10 @@ export default function Carousel({
     ],
   };
 
-  // Decide which overlay image to show
-  const overlaySrc =
-    carouselType === SELECTION_TYPE.CASE
-      ? selectedBand?.src
-      : selectedCase?.src;
-  const overlayAlt =
-    carouselType === SELECTION_TYPE.CASE
-      ? selectedBand?.alt
-      : selectedCase?.alt;
-
-  const overlayZindex = carouselType === SELECTION_TYPE.CASE ? 10 : 100;
-
   return (
-    <div
-      className="relative w-screen bg-white border overflow-hidden"
-      style={{ position: "relative" }}
-    >
-      {/* Overlay image, behind the carousel (z-10 on the carousel, z-0 here) */}
-      <img
-        src={overlaySrc}
-        alt={overlayAlt}
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "312px",
-          height: "312px",
-          objectFit: "cover",
-          zIndex: overlayZindex,
-        }}
-      />
-
-      {/* Slick Slider above the overlay */}
-      <Slider {...settings} className="z-10">
-        {items.map((item, index) => (
+    <div className="relative w-screen bg-white border overflow-hidden">
+      <Slider ref={sliderRef} {...settings}>
+        {items.map((item) => (
           <div
             key={item.id}
             style={{
@@ -138,13 +103,7 @@ export default function Carousel({
             }}
             className="flex justify-center items-center mx-auto"
           >
-            <img
-              src={item.src}
-              alt={item.alt}
-              style={{
-                objectFit: "cover",
-              }}
-            />
+            <img src={item.src} alt={item.alt} style={{ objectFit: "cover" }} />
           </div>
         ))}
       </Slider>
