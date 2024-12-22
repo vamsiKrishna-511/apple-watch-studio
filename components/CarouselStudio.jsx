@@ -51,6 +51,8 @@ export default function CarouselStudio() {
           initialIndex={caseIndex}
           onCenterChange={handleCaseCenterChange}
           carouselType={SELECTION_TYPE.CASE}
+          selectedCase={selectedCase}
+          selectedBand={selectedBand}
         />
       )}
 
@@ -61,6 +63,8 @@ export default function CarouselStudio() {
           initialIndex={bandIndex}
           onCenterChange={handleBandCenterChange}
           carouselType={SELECTION_TYPE.BAND}
+          selectedCase={selectedCase}
+          selectedBand={selectedBand}
         />
       )}
 

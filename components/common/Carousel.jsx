@@ -1,4 +1,5 @@
 "use client";
+import { SELECTION_TYPE } from "@/utils/constants";
 import React, { useRef, useEffect, useState } from "react";
 import Slider from "react-slick";
 
@@ -53,6 +54,8 @@ export default function Carousel({
   initialIndex = 0,
   onCenterChange,
   carouselType,
+  selectedCase,
+  selectedBand,
 }) {
   const sliderRef = useRef(null);
   const [centerIndex, setCenterIndex] = useState(initialIndex);
@@ -91,8 +94,35 @@ export default function Carousel({
     ],
   };
 
+  // Decide which overlay image to show
+  const overlaySrc =
+    carouselType === SELECTION_TYPE.CASE
+      ? selectedBand?.src
+      : selectedCase?.src;
+  const overlayAlt =
+    carouselType === SELECTION_TYPE.CASE
+      ? selectedBand?.alt
+      : selectedCase?.alt;
+
+  const overlayZindex = carouselType === SELECTION_TYPE.CASE ? 0 : 10;
+
   return (
     <div className="relative w-screen bg-white border overflow-hidden">
+      {/* Overlay image, behind the carousel (z-10 on the carousel, z-0 here) */}
+      <img
+        src={overlaySrc}
+        alt={overlayAlt}
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "312px",
+          height: "312px",
+          objectFit: "cover",
+          zIndex: overlayZindex,
+        }}
+      />
       <Slider ref={sliderRef} {...settings}>
         {items.map((item) => (
           <div
@@ -103,7 +133,11 @@ export default function Carousel({
             }}
             className="flex justify-center items-center mx-auto"
           >
-            <img src={item.src} alt={item.alt} style={{ objectFit: "cover" }} />
+            <img
+              src={item.src}
+              alt={item.alt}
+              style={{ objectFit: "cover", zIndex: 100 }}
+            />
           </div>
         ))}
       </Slider>
