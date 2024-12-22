@@ -96,37 +96,42 @@ export default function Carousel({
 
   // Decide which overlay image to show
   const overlaySrc =
-    carouselType === SELECTION_TYPE.CASE
+    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
       ? selectedBand?.src
       : selectedCase?.src;
   const overlayAlt =
-    carouselType === SELECTION_TYPE.CASE
+    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
       ? selectedBand?.alt
       : selectedCase?.alt;
 
-  const overlayZindex = carouselType === SELECTION_TYPE.CASE ? 0 : 10;
+  const overlayZindex =
+    carouselType === SELECTION_TYPE.CASE || carouselType === SELECTION_TYPE.SIZE
+      ? 0
+      : 10;
 
   return (
-    <div className="relative w-screen bg-white border overflow-hidden">
+    <div className="relative w-screen bg-white overflow-hidden">
       {/* Overlay image, behind the carousel (z-10 on the carousel, z-0 here) */}
-      <img
-        src={overlaySrc}
-        alt={overlayAlt}
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "312px",
-          height: "312px",
-          objectFit: "cover",
-          zIndex: overlayZindex,
-        }}
-      />
+      {overlaySrc && (
+        <img
+          src={overlaySrc}
+          alt={overlayAlt}
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "312px",
+            height: "312px",
+            objectFit: "cover",
+            zIndex: overlayZindex,
+          }}
+        />
+      )}
       <Slider ref={sliderRef} {...settings}>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <div
-            key={item.id}
+            key={index}
             style={{
               width: "312px",
               height: "312px",
