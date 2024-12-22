@@ -87,7 +87,7 @@ export const ProductName = (props) => (
   <SFProDisplay size="12px" lineHeight="16px" {...props} />
 );
 
-export const SaveButton = (props) => (
+export const SaveButtonText = (props) => (
   <SFProDisplay size="14px" lineHeight="18px" {...props} />
 );
 

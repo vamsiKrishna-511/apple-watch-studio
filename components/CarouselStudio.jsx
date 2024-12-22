@@ -15,7 +15,7 @@ import {
   Caption,
   NavigationItem,
   ProductDescription,
-  SaveButton,
+  SaveButtonText,
 } from "./common/Text";
 
 export default function CarouselStudio() {
@@ -162,10 +162,10 @@ export default function CarouselStudio() {
         <Caption bold color="rgb(110, 110, 115)">
           APPLE WATCH SERIES 10
         </Caption>
-        <SaveButton bold className="mt-2">
+        <SaveButtonText bold className="mt-2">
           {selectedSize?.alt} {selectedCase?.alt}
           {selectedBand?.alt && ` with ${selectedBand?.alt}`}
-        </SaveButton>
+        </SaveButtonText>
         <ProductDescription className="mt-2">
           ${selectedSize?.price + selectedCase?.price + selectedBand?.price}
         </ProductDescription>
