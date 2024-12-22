@@ -1,61 +1,7 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import Image from "next/image";
 import { SELECTION_TYPE } from "@/utils/constants";
-
-const settings = {
-  infinite: false, // Don’t loop, so we can stop at last item
-  centerMode: true, // Keep the active slide centered
-  centerPadding: "0px", // No extra side padding
-  variableWidth: true, // Each slide can have its own width
-  slidesToShow: 1, // 'slidesToShow' is effectively overridden by variableWidth
-  slidesToScroll: 1,
-  swipeToSlide: true, // Allows swiping beyond just slidesToScroll
-  initialSlide: 0, // Start at the first item (which will be centered)
-  nextArrow: <NextArrow />,
-  prevArrow: <PrevArrow />,
-  responsive: [
-    {
-      // On narrower screens, you might want smaller slides or different styling.
-      breakpoint: 768,
-      settings: {
-        centerMode: true,
-        variableWidth: true,
-        slidesToShow: 1,
-      },
-    },
-  ],
-};
-
-export default function Carousel({ items, carouselType, selectedItem }) {
-  console.log("selectedItem nik", selectedItem);
-  return (
-    <div className="relative w-screen overflow-hidden bg-white border">
-      <Slider {...settings}>
-        {items.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              width: carouselType === SELECTION_TYPE.CASE ? "312px" : "312px",
-              height: "312px",
-            }}
-            className="flex justify-center items-center mx-auto"
-          >
-            <img
-              src={item.src}
-              alt={item.alt}
-              style={{
-                transform: carouselType === SELECTION_TYPE.CASE && "scale(1.2)",
-                objectFit: "cover",
-              }}
-            />
-          </div>
-        ))}
-      </Slider>
-    </div>
-  );
-}
 
 // Custom arrow for "Next" button
 function NextArrow(props) {
@@ -63,7 +9,7 @@ function NextArrow(props) {
   return (
     <button
       type="button"
-      className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/70 rounded-full shadow hover:bg-white transition"
+      className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/70 rounded-full shadow hover:bg-white transition"
       onClick={onClick}
       aria-label="Next Slide"
     >
@@ -85,7 +31,7 @@ function PrevArrow(props) {
   return (
     <button
       type="button"
-      className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 bg-white/70 rounded-full shadow hover:bg-white transition"
+      className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/70 rounded-full shadow hover:bg-white transition"
       onClick={onClick}
       aria-label="Previous Slide"
     >
@@ -102,5 +48,104 @@ function PrevArrow(props) {
         />
       </svg>
     </button>
+  );
+}
+
+export default function Carousel({
+  items,
+  carouselType,
+  selectedItem,
+  handleSelectedItem,
+  selectedCase,
+  selectedBand,
+}) {
+  // Track which item is at the center
+  const [centerIndex, setCenterIndex] = useState(0);
+
+  useEffect(() => {
+    handleSelectedItem(centerIndex);
+  }, [centerIndex]);
+
+  const settings = {
+    infinite: false,
+    centerMode: true,
+    centerPadding: "0px",
+    variableWidth: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    swipeToSlide: true,
+    initialSlide: 0,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    afterChange: (currentSlideIndex) => {
+      setCenterIndex(currentSlideIndex);
+    },
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          centerMode: true,
+          variableWidth: true,
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
+
+  // Decide which overlay image to show
+  const overlaySrc =
+    carouselType === SELECTION_TYPE.CASE
+      ? selectedBand?.src
+      : selectedCase?.src;
+  const overlayAlt =
+    carouselType === SELECTION_TYPE.CASE
+      ? selectedBand?.alt
+      : selectedCase?.alt;
+
+  const overlayZindex = carouselType === SELECTION_TYPE.CASE ? 10 : 100;
+
+  return (
+    <div
+      className="relative w-screen bg-white border overflow-hidden"
+      style={{ position: "relative" }}
+    >
+      {/* Overlay image, behind the carousel (z-10 on the carousel, z-0 here) */}
+      <img
+        src={overlaySrc}
+        alt={overlayAlt}
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "312px",
+          height: "312px",
+          objectFit: "cover",
+          zIndex: overlayZindex,
+        }}
+      />
+
+      {/* Slick Slider above the overlay */}
+      <Slider {...settings} className="z-10">
+        {items.map((item, index) => (
+          <div
+            key={item.id}
+            style={{
+              width: "312px",
+              height: "312px",
+            }}
+            className="flex justify-center items-center mx-auto"
+          >
+            <img
+              src={item.src}
+              alt={item.alt}
+              style={{
+                objectFit: "cover",
+              }}
+            />
+          </div>
+        ))}
+      </Slider>
+    </div>
   );
 }

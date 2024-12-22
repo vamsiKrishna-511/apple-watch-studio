@@ -40,6 +40,8 @@ export default function CarouselStudio() {
         handleSelectedItem={handleSelectedItem}
         carouselType={carouselType}
         selectedItem={selectedItem}
+        selectedCase={selectedCase}
+        selectedBand={selectedBand}
       />
 
       {/* Additional UI below carousel */}
