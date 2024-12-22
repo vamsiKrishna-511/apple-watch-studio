@@ -12,6 +12,7 @@ export default function CarouselStudio() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedBand, setSelectedBand] = useState(null);
   const [carouselType, setCarouselType] = useState(SELECTION_TYPE.CASE);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   // React Slick will call handleSelectedItem(index) whenever the active slide changes
   const handleSelectedItem = (index) => {
@@ -33,6 +34,15 @@ export default function CarouselStudio() {
     }
   };
 
+  const handleCaseClick = () => {
+    setCarouselType(SELECTION_TYPE.CASE);
+    const switchedCase = DIAL_DATA.findIndex(
+      (item) => item.alt === selectedCase.alt
+    );
+    console.log("switchedCase nik", switchedCase);
+    setSelectedIndex(switchedCase);
+  };
+
   return (
     <div className="w-screen bg-white">
       <Carousel
@@ -42,6 +52,7 @@ export default function CarouselStudio() {
         selectedItem={selectedItem}
         selectedCase={selectedCase}
         selectedBand={selectedBand}
+        selectedIndex={selectedIndex}
       />
 
       {/* Additional UI below carousel */}
@@ -55,7 +66,7 @@ export default function CarouselStudio() {
         <div
           className="cursor-pointer px-5 py-2 rounded-full"
           style={{ backgroundColor: COLORS.SOFT_GRAY }}
-          onClick={() => setCarouselType(SELECTION_TYPE.CASE)}
+          onClick={handleCaseClick}
         >
           <NavigationItem>Case</NavigationItem>
         </div>

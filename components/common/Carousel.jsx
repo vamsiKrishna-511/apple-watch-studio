@@ -58,12 +58,13 @@ export default function Carousel({
   handleSelectedItem,
   selectedCase,
   selectedBand,
+  selectedIndex,
 }) {
   // Track which item is at the center
-  const [centerIndex, setCenterIndex] = useState(0);
+  const [centerIndex, setCenterIndex] = useState(selectedIndex);
 
   useEffect(() => {
-    handleSelectedItem(centerIndex);
+    // handleSelectedItem(centerIndex);
   }, [centerIndex]);
 
   const settings = {
@@ -74,11 +75,12 @@ export default function Carousel({
     slidesToShow: 1,
     slidesToScroll: 1,
     swipeToSlide: true,
-    initialSlide: 0,
+    initialSlide: centerIndex,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     afterChange: (currentSlideIndex) => {
       setCenterIndex(currentSlideIndex);
+      handleSelectedItem(currentSlideIndex);
     },
     responsive: [
       {
