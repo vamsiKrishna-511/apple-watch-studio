@@ -73,6 +73,7 @@ export function WatchConfigProvider({ children }) {
     selectedSize,
     setSelectedSize,
     directlyShowSelection,
+    setDirectlyShowSelection,
   };
 
   return (

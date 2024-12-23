@@ -4,7 +4,6 @@ import React, { useRef, useEffect, useState } from "react";
 import Slider from "react-slick";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-// Custom arrow for "Next" button
 function NextArrow(props) {
   const { onClick } = props;
   return (
@@ -21,7 +20,6 @@ function NextArrow(props) {
   );
 }
 
-// Custom arrow for "Previous" button
 function PrevArrow(props) {
   const { onClick } = props;
   return (
@@ -38,12 +36,6 @@ function PrevArrow(props) {
   );
 }
 
-/**
- * Universal Carousel component with keyboard support:
- * - Arrow keys move slides left/right when the carousel container is focused.
- * - Custom next/prev arrow buttons.
- * - ARIA roles for accessibility.
- */
 export default function Carousel({
   items,
   initialIndex = 0,

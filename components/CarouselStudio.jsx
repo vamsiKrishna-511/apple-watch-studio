@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Carousel from "./common/Carousel";
 
@@ -37,10 +37,15 @@ export default function CarouselStudio() {
     selectedSize,
     setSelectedSize,
     directlyShowSelection,
+    setDirectlyShowSelection,
   } = useWatchConfig();
 
   const [showCarousel, setShowCarousel] = useState(directlyShowSelection);
   const [carouselType, setCarouselType] = useState(SELECTION_TYPE.CASE);
+
+  useEffect(() => {
+    setDirectlyShowSelection(true);
+  }, []);
 
   // Handlers for changing the centered slide in each carousel
   const handleCaseCenterChange = (newIndex) => {
@@ -119,23 +124,6 @@ export default function CarouselStudio() {
 
   const currentViewKey = showCarousel ? carouselType : "static";
 
-  /**
-   * 4. "Save" button handler
-   *    - Build a shareable URL with query params
-   *    - Copy to clipboard
-   *    - Open in new tab (optional)
-   */
-  const handleSave = () => {
-    if (typeof window !== "undefined") {
-      const baseUrl = window.location.origin;
-      // Use the .id property from your data objects
-      const configUrl = `${baseUrl}?case=${selectedCase.id}&band=${selectedBand.id}&size=${selectedSize.id}`;
-
-      // Copy to clipboard
-      navigator.clipboard.writeText(configUrl);
-    }
-  };
-
   return (
     <div className="w-screen bg-white">
       <AnimatePresence mode="wait">
@@ -212,13 +200,6 @@ export default function CarouselStudio() {
         >
           <NavigationItem>Band</NavigationItem>
         </div>
-        {/* Save button
-        <button
-          onClick={handleSave}
-          className="px-5 py-2 rounded-full bg-black text-white"
-        >
-          Save
-        </button> */}
       </div>
     </div>
   );

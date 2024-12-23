@@ -7,9 +7,11 @@ import { SaveButton } from "./common/Buttons";
 import CollectionsMenu from "./CollectionsMenu";
 import Modal from "./common/Modal";
 import { useWatchConfig } from "@/context/WatchContext";
+import { FiChevronDown } from "react-icons/fi";
 
 const Navbar = () => {
-  const { selectedCase, selectedBand, selectedSize } = useWatchConfig();
+  const { selectedCase, selectedBand, selectedSize, directlyShowSelection } =
+    useWatchConfig();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -44,14 +46,22 @@ const Navbar = () => {
         alt="apple watch studio icon"
       />
 
-      {/* Clicking this text will open the modal */}
-      <div className="" onClick={handleOpenModal}>
-        <GeneralText className="pr-10 cursor-pointer z-50">
-          Collections
-        </GeneralText>
-      </div>
+      {directlyShowSelection && (
+        <>
+          {/* Clicking this text will open the modal */}
+          <div
+            className="flex justify-center items-center pr-10"
+            onClick={handleOpenModal}
+          >
+            <GeneralText className="cursor-pointer z-50 pr-2">
+              Collections
+            </GeneralText>
+            <FiChevronDown />
+          </div>
 
-      <SaveButton onClick={handleSave}>Save</SaveButton>
+          <SaveButton onClick={handleSave}>Save</SaveButton>
+        </>
+      )}
 
       {/* The modal (hidden by default) */}
       <Modal isOpen={showModal} onClose={handleCloseModal}>

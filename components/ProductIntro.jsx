@@ -5,13 +5,11 @@ import COLORS from "@/utils/colors";
 import { PrimaryButton } from "./common/Buttons";
 import Image from "next/image";
 import { CONSTANTS } from "@/utils/constants";
-import CarouselStudio from "./CarouselStudio";
 import WatchStudio from "./WatchStudio";
 import { useWatchConfig } from "@/context/WatchContext";
 
 const ProductIntro = () => {
   const { directlyShowSelection } = useWatchConfig();
-  console.log("directlyShowSelection nik", directlyShowSelection);
   const [isStarted, setIsStarted] = useState(directlyShowSelection);
   const [isExpanded, setIsExpanded] = useState(directlyShowSelection);
 
@@ -33,7 +31,6 @@ const ProductIntro = () => {
 
       {!isExpanded && (
         <div>
-          {/* Text and button fade out when isStarted = true */}
           <div
             className={`w-[720px] transition-opacity duration-500 ${
               isStarted ? "opacity-0 pointer-events-none" : "opacity-100"
